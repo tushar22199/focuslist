@@ -1,20 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import {
-  Check,
-  CheckCircle2,
-  Circle,
-  ClipboardList,
-  Edit3,
-  Filter,
-  ListFilter,
-  Plus,
-  Search,
-  Sparkles,
-  Trash2,
-  X,
-} from 'lucide-react'
+import { Check, CheckCircle2, Circle, ClipboardList, Edit3, Filter, ListFilter, Plus, Search, Sparkles, Trash2, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type Priority = 'High' | 'Medium' | 'Low'
@@ -24,13 +11,11 @@ type Task = { id: string; title: string; priority: Priority; completed: boolean;
 const initialTasks: Task[] = [
   { id: '1', title: 'Review project brief', priority: 'High', completed: false, createdAt: 3 },
   { id: '2', title: 'Reply to team messages', priority: 'Medium', completed: false, createdAt: 2 },
-  { id: '3', title: 'Plan tomorrow\'s priorities', priority: 'Low', completed: true, createdAt: 1 },
+  { id: '3', title: "Plan tomorrow's priorities", priority: 'Low', completed: true, createdAt: 1 },
 ]
 
 const priorityStyles: Record<Priority, string> = {
-  High: 'bg-rose-50 text-rose-700 ring-rose-200',
-  Medium: 'bg-amber-50 text-amber-700 ring-amber-200',
-  Low: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+  High: 'retro-tag-red', Medium: 'retro-tag-yellow', Low: 'retro-tag-blue',
 }
 
 export default function Page() {
@@ -43,22 +28,10 @@ export default function Page() {
   const [priorityFilter, setPriorityFilter] = useState<'All' | Priority>('All')
   const [search, setSearch] = useState('')
 
-  useEffect(() => {
-    const saved = window.localStorage.getItem('focuslist-tasks')
-    setTasks(saved ? JSON.parse(saved) : initialTasks)
-    setHydrated(true)
-  }, [])
+  useEffect(() => { const saved = window.localStorage.getItem('focuslist-tasks'); setTasks(saved ? JSON.parse(saved) : initialTasks); setHydrated(true) }, [])
+  useEffect(() => { if (hydrated) window.localStorage.setItem('focuslist-tasks', JSON.stringify(tasks)) }, [tasks, hydrated])
 
-  useEffect(() => {
-    if (hydrated) window.localStorage.setItem('focuslist-tasks', JSON.stringify(tasks))
-  }, [tasks, hydrated])
-
-  const stats = useMemo(() => ({
-    total: tasks.length,
-    completed: tasks.filter((task) => task.completed).length,
-    pending: tasks.filter((task) => !task.completed).length,
-  }), [tasks])
-
+  const stats = useMemo(() => ({ total: tasks.length, completed: tasks.filter((task) => task.completed).length, pending: tasks.filter((task) => !task.completed).length }), [tasks])
   const visibleTasks = useMemo(() => tasks.filter((task) => {
     const matchesSearch = task.title.toLowerCase().includes(search.toLowerCase())
     const matchesFilter = filter === 'All' || (filter === 'Completed' ? task.completed : !task.completed)
@@ -67,95 +40,42 @@ export default function Page() {
   }), [tasks, search, filter, priorityFilter])
 
   function submitTask(event: React.FormEvent) {
-    event.preventDefault()
-    const cleanTitle = title.trim()
-    if (!cleanTitle) return
-    if (editingId) {
-      setTasks((current) => current.map((task) => task.id === editingId ? { ...task, title: cleanTitle, priority } : task))
-      setEditingId(null)
-    } else {
-      setTasks((current) => [{ id: crypto.randomUUID(), title: cleanTitle, priority, completed: false, createdAt: Date.now() }, ...current])
-    }
-    setTitle('')
-    setPriority('Medium')
+    event.preventDefault(); const cleanTitle = title.trim(); if (!cleanTitle) return
+    if (editingId) setTasks((current) => current.map((task) => task.id === editingId ? { ...task, title: cleanTitle, priority } : task))
+    else setTasks((current) => [{ id: crypto.randomUUID(), title: cleanTitle, priority, completed: false, createdAt: Date.now() }, ...current])
+    setEditingId(null); setTitle(''); setPriority('Medium')
   }
-
-  function startEditing(task: Task) {
-    setEditingId(task.id)
-    setTitle(task.title)
-    setPriority(task.priority)
-    document.getElementById('task-title')?.focus()
-  }
-
-  function cancelEditing() {
-    setEditingId(null)
-    setTitle('')
-    setPriority('Medium')
-  }
+  function startEditing(task: Task) { setEditingId(task.id); setTitle(task.title); setPriority(task.priority); document.getElementById('task-title')?.focus() }
+  function cancelEditing() { setEditingId(null); setTitle(''); setPriority('Medium') }
 
   return (
-    <main className="min-h-screen bg-[#f4f6f2] text-[#18332a]">
-      <div className="relative mx-auto max-w-7xl px-5 py-6 sm:px-8 sm:py-10">
-        <div aria-hidden="true" className="pointer-events-none absolute -top-32 right-0 size-96 rounded-full bg-[#dceee2] opacity-60 blur-3xl" />
-        <div aria-hidden="true" className="pointer-events-none absolute top-[34rem] -left-32 size-72 rounded-full bg-[#e8e4f5] opacity-50 blur-3xl" />
-        <div className="relative">
-        <header className="mb-10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-[#183f32] text-white shadow-sm"><ClipboardList aria-hidden="true" /></div>
-            <div><p className="text-lg font-semibold tracking-tight">FocusList</p><p className="text-xs text-[#718078]">Your day, made clear.</p></div>
-          </div>
-          <div className="hidden items-center gap-2 rounded-full border border-[#dfe7e1] bg-white px-3 py-2 text-xs font-medium text-[#61736a] sm:flex"><Sparkles className="size-3.5 text-[#e39b42]" /> Small steps, big progress</div>
+    <main className="retro-desktop min-h-screen px-3 py-5 text-[#17263b] sm:px-6 sm:py-8">
+      <div className="mx-auto max-w-5xl">
+        <header className="retro-window mb-4">
+          <div className="retro-titlebar"><span className="flex items-center gap-2"><ClipboardList className="size-3.5" /> FOCUSLIST MODERN</span><WindowButtons /></div>
+          <nav className="retro-menubar"><span>File</span><span>Tasks</span><span>Options</span><span>View</span><span>Help</span><span className="ml-auto hidden sm:inline">VISUAL</span></nav>
         </header>
 
-        <section className="mb-9 grid gap-7 lg:grid-cols-[1fr_300px] lg:items-end">
-          <div><p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#7e9087]">Today&apos;s focus</p><h1 className="max-w-xl text-4xl font-semibold tracking-[-0.04em] text-[#18332a] sm:text-5xl">Make space for what matters.</h1><p className="mt-4 max-w-lg text-base leading-7 text-[#718078]">Capture your priorities, keep momentum, and finish the day feeling lighter.</p></div>
-          <div className="rounded-[1.75rem] border border-white/80 bg-white/85 p-3 shadow-[0_18px_50px_rgba(24,51,42,0.08)] backdrop-blur-sm">
-            <div className="grid grid-cols-3 gap-2">
-              <Stat label="Total" value={stats.total} />
-              <Stat label="Done" value={stats.completed} accent="text-[#3d8b70]" />
-              <Stat label="Pending" value={stats.pending} accent="text-[#c58132]" />
-            </div>
-            <div className="mt-3 flex items-center justify-between px-2 text-[11px] font-medium text-[#829088]"><span>Daily progress</span><span>{stats.total ? Math.round((stats.completed / stats.total) * 100) : 0}%</span></div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#edf2ed]"><div className="h-full rounded-full bg-[#5d9d7b] transition-all duration-500" style={{ width: `${stats.total ? (stats.completed / stats.total) * 100 : 0}%` }} /></div>
+        <section className="retro-window mb-4">
+          <div className="retro-titlebar"><span>FOCUSLIST // DAILY CONTROL CENTER</span><WindowButtons /></div>
+          <div className="grid gap-5 p-4 sm:p-6 lg:grid-cols-[1fr_260px]">
+            <div><p className="retro-kicker">[ TODAY&apos;S FOCUS ]</p><h1 className="retro-heading">Make space for what matters.</h1><p className="mt-3 max-w-xl text-sm leading-6 text-[#344b66]">Capture your priorities, keep momentum, and finish the day feeling lighter.</p><div className="mt-5 flex flex-wrap gap-2"><span className="retro-chip"><Sparkles className="size-3" /> SMALL STEPS, BIG PROGRESS</span><span className="retro-chip">SYS_READY</span></div></div>
+            <div className="retro-screen"><p className="mb-3 text-[10px] font-bold tracking-[0.18em] text-[#b8d5ee]">STATUS MONITOR</p><div className="grid grid-cols-3 gap-2"><Stat label="TOTAL" value={stats.total} /><Stat label="DONE" value={stats.completed} /><Stat label="PENDING" value={stats.pending} /></div><div className="mt-4 flex justify-between text-[10px] text-[#b8d5ee]"><span>DAILY PROGRESS</span><span>{stats.total ? Math.round((stats.completed / stats.total) * 100) : 0}%</span></div><div className="retro-progress mt-2"><div style={{ width: `${stats.total ? (stats.completed / stats.total) * 100 : 0}%` }} /></div></div>
           </div>
         </section>
 
-        <section className="grid gap-5 lg:grid-cols-[300px_1fr]">
-          <aside className="h-fit rounded-3xl border border-[#e1e9e2] bg-white p-5 shadow-[0_8px_30px_rgba(24,51,42,0.04)] lg:sticky lg:top-6">
-            <div className="mb-5 flex items-center justify-between"><h2 className="font-semibold">{editingId ? 'Edit task' : 'Add a task'}</h2>{editingId && <button onClick={cancelEditing} className="rounded-full p-1 text-[#718078] hover:bg-[#f1f5f1]" aria-label="Cancel editing"><X className="size-4" /></button>}</div>
-            <form onSubmit={submitTask} className="flex flex-col gap-4">
-              <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="task-title">What needs doing?<input id="task-title" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="e.g. Finish presentation" className="h-11 rounded-xl border border-[#dce6de] bg-[#fbfcfb] px-3 text-sm font-normal outline-none transition placeholder:text-[#a1afa7] focus:border-[#6c9b87] focus:ring-4 focus:ring-[#dff0e7]" /></label>
-              <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="task-priority">Priority<select id="task-priority" value={priority} onChange={(event) => setPriority(event.target.value as Priority)} className="h-11 rounded-xl border border-[#dce6de] bg-[#fbfcfb] px-3 text-sm font-normal outline-none focus:border-[#6c9b87] focus:ring-4 focus:ring-[#dff0e7]">{(['High', 'Medium', 'Low'] as Priority[]).map((item) => <option key={item}>{item}</option>)}</select></label>
-              <button type="submit" className="mt-1 flex h-11 items-center justify-center gap-2 rounded-xl bg-[#183f32] px-4 text-sm font-semibold text-white transition hover:bg-[#245846] focus:outline-none focus:ring-4 focus:ring-[#cde7d9]"><Plus className="size-4" />{editingId ? 'Save changes' : 'Add task'}</button>
-            </form>
-            <div className="mt-6 rounded-2xl bg-[#f5f8f5] p-4 text-xs leading-5 text-[#73847b]"><p className="font-semibold text-[#486357]">A gentle reminder</p><p className="mt-1">You don&apos;t have to do everything today. Start with one thing.</p></div>
-          </aside>
+        <section className="grid gap-4 lg:grid-cols-[285px_1fr]">
+          <aside className="retro-window h-fit"><div className="retro-titlebar"><span>{editingId ? 'EDIT TASK' : 'NEW TASK'}</span><WindowButtons /></div><div className="p-4"><form onSubmit={submitTask} className="flex flex-col gap-3"><label className="retro-label" htmlFor="task-title">TASK NAME<input id="task-title" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="e.g. Finish presentation" className="retro-input" /></label><label className="retro-label" htmlFor="task-priority">PRIORITY<select id="task-priority" value={priority} onChange={(event) => setPriority(event.target.value as Priority)} className="retro-input">{(['High', 'Medium', 'Low'] as Priority[]).map((item) => <option key={item}>{item}</option>)}</select></label><button type="submit" className="retro-button retro-button-primary"><Plus className="size-4" /> {editingId ? 'SAVE CHANGES' : 'ADD TASK'}</button>{editingId && <button type="button" onClick={cancelEditing} className="retro-button">CANCEL</button>}</form><div className="retro-note mt-5"><b>REMINDER //</b><p className="mt-1">You don&apos;t have to do everything today. Start with one thing.</p></div></div></aside>
 
-          <div className="min-w-0">
-            <div className="mb-4 flex flex-col gap-3 rounded-3xl border border-[#e1e9e2] bg-white p-3 shadow-[0_8px_30px_rgba(24,51,42,0.04)] sm:p-4">
-              <div className="flex flex-col gap-3 sm:flex-row"><div className="relative flex-1"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#91a098]" /><input aria-label="Search tasks" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search your tasks..." className="h-10 w-full rounded-xl border border-[#e2e9e3] bg-[#fbfcfb] pl-9 pr-3 text-sm outline-none focus:border-[#6c9b87] focus:ring-4 focus:ring-[#dff0e7]" /></div><div className="relative"><Filter className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-[#91a098]" /><select aria-label="Filter by priority" value={priorityFilter} onChange={(event) => setPriorityFilter(event.target.value as 'All' | Priority)} className="h-10 w-full appearance-none rounded-xl border border-[#e2e9e3] bg-[#fbfcfb] pl-9 pr-8 text-sm outline-none focus:border-[#6c9b87] sm:w-36">{['All', 'High', 'Medium', 'Low'].map((item) => <option key={item} value={item}>{item === 'All' ? 'All priorities' : item}</option>)}</select></div></div>
-              <div className="flex items-center gap-1 border-t border-[#eef2ee] pt-3"><ListFilter className="mr-1 size-4 text-[#91a098]" />{(['All', 'Active', 'Completed'] as FilterMode[]).map((item) => <button key={item} onClick={() => setFilter(item)} className={cn('rounded-lg px-3 py-1.5 text-xs font-semibold transition', filter === item ? 'bg-[#e7f2eb] text-[#286147]' : 'text-[#7a8981] hover:bg-[#f3f6f3]')}>{item}<span className="ml-1.5 opacity-60">{item === 'All' ? stats.total : item === 'Active' ? stats.pending : stats.completed}</span></button>)}</div>
-            </div>
-
-            <div className="mb-3 flex items-center justify-between"><h2 className="text-lg font-semibold">Your tasks <span className="ml-1 text-sm font-normal text-[#91a098]">{visibleTasks.length}</span></h2>{stats.total > 0 && <p className="text-xs text-[#91a098]">{stats.completed} of {stats.total} completed</p>}</div>
-            <div className="flex flex-col gap-2.5">{visibleTasks.length > 0 ? visibleTasks.map((task) => <TaskRow key={task.id} task={task} onToggle={() => setTasks((current) => current.map((item) => item.id === task.id ? { ...item, completed: !item.completed } : item))} onEdit={() => startEditing(task)} onDelete={() => setTasks((current) => current.filter((item) => item.id !== task.id))} />) : <div className="rounded-3xl border border-dashed border-[#cad9ce] bg-white px-6 py-16 text-center"><CheckCircle2 className="mx-auto size-10 text-[#a2c5af]" /><h3 className="mt-3 font-semibold">Nothing here yet</h3><p className="mt-1 text-sm text-[#84948b]">Try changing your filters or add a new task.</p></div>}</div>
-          </div>
+          <div className="min-w-0"><div className="retro-window mb-4"><div className="retro-titlebar"><span>PLAYLIST EDITOR // TASKS</span><WindowButtons /></div><div className="p-3"><div className="flex flex-col gap-2 sm:flex-row"><div className="relative flex-1"><Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-[#59708a]" /><input aria-label="Search tasks" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tasks..." className="retro-input pl-9" /></div><div className="relative"><Filter className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-[#59708a]" /><select aria-label="Filter by priority" value={priorityFilter} onChange={(event) => setPriorityFilter(event.target.value as 'All' | Priority)} className="retro-input w-full pl-8 sm:w-36"><option value="All">All priorities</option>{(['High', 'Medium', 'Low'] as Priority[]).map((item) => <option key={item}>{item}</option>)}</select></div></div><div className="mt-3 flex flex-wrap items-center gap-1 border-t border-[#afbdd0] pt-3"><ListFilter className="mr-1 size-4" />{(['All', 'Active', 'Completed'] as FilterMode[]).map((item) => <button key={item} onClick={() => setFilter(item)} className={cn('retro-tab', filter === item && 'retro-tab-active')}>{item}<span className="ml-1 opacity-60">{item === 'All' ? stats.total : item === 'Active' ? stats.pending : stats.completed}</span></button>)}</div></div></div><div className="mb-2 flex items-center justify-between px-1"><h2 className="text-sm font-bold tracking-wide">YOUR TASKS <span className="font-normal text-[#61758b]">({visibleTasks.length})</span></h2><p className="text-[10px] text-[#61758b]">{stats.completed}/{stats.total} COMPLETE</p></div><div className="flex flex-col gap-2">{visibleTasks.length > 0 ? visibleTasks.map((task) => <TaskRow key={task.id} task={task} onToggle={() => setTasks((current) => current.map((item) => item.id === task.id ? { ...item, completed: !item.completed } : item))} onEdit={() => startEditing(task)} onDelete={() => setTasks((current) => current.filter((item) => item.id !== task.id))} />) : <div className="retro-empty"><CheckCircle2 className="mx-auto size-9" /><h3 className="mt-2 font-bold">NOTHING HERE YET</h3><p className="mt-1 text-xs">Try changing your filters or add a new task.</p></div>}</div></div>
         </section>
-        <footer className="mt-10 text-center text-xs text-[#9aa79f]">FocusList · Your tasks are saved automatically in this browser.</footer>
-        </div>
+        <footer className="mt-5 text-center text-[10px] tracking-widest text-[#526b86]">FOCUSLIST // LOCAL DATABASE // ALL SYSTEMS NOMINAL</footer>
       </div>
     </main>
   )
 }
 
-function Stat({ label, value, accent = 'text-[#18332a]' }: { label: string; value: number; accent?: string }) {
-  return <div className="rounded-2xl bg-[#f7faf7] px-2 py-3 text-center"><p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#94a29a]">{label}</p><p className={cn('mt-1 text-2xl font-semibold tracking-tight', accent)}>{value}</p></div>
-}
+function WindowButtons() { return <span className="flex gap-1"><i /><i /><i /><i /></span> }
+function Stat({ label, value }: { label: string; value: number }) { return <div className="text-center"><p className="text-[9px] font-bold text-[#9ebbd5]">{label}</p><p className="mt-1 text-2xl font-bold text-white">{value}</p></div> }
+function TaskRow({ task, onToggle, onEdit, onDelete }: { task: Task; onToggle: () => void; onEdit: () => void; onDelete: () => void }) { return <article className={cn('retro-track group flex items-center gap-3 p-3', task.completed && 'retro-track-done')}><button onClick={onToggle} aria-label={task.completed ? `Mark ${task.title} as active` : `Mark ${task.title} as completed`} className={cn('flex size-6 shrink-0 items-center justify-center rounded-full border-2', task.completed ? 'border-[#d7e7f6] bg-[#527ea8] text-white' : 'border-[#6f8298] text-transparent')} >{task.completed ? <Check className="size-3.5" strokeWidth={3} /> : <Circle className="size-3.5" />}</button><div className="min-w-0 flex-1"><p className={cn('truncate text-sm font-semibold', task.completed && 'text-[#6e8294] line-through')}>{task.title}</p><span className={cn('retro-tag', priorityStyles[task.priority])}>{task.priority.toUpperCase()}</span></div><div className="flex shrink-0 gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100"><button onClick={onEdit} className="retro-icon" aria-label={`Edit ${task.title}`}><Edit3 className="size-3.5" /></button><button onClick={onDelete} className="retro-icon" aria-label={`Delete ${task.title}`}><Trash2 className="size-3.5" /></button></div></article> }
 
-function TaskRow({ task, onToggle, onEdit, onDelete }: { task: Task; onToggle: () => void; onEdit: () => void; onDelete: () => void }) {
-  return <article className={cn('group flex items-center gap-3 rounded-2xl border bg-white p-4 shadow-[0_4px_20px_rgba(24,51,42,0.03)] transition hover:border-[#c7d9cc] hover:shadow-[0_8px_24px_rgba(24,51,42,0.07)]', task.completed ? 'border-[#e7eee8]' : 'border-[#e1e9e2]')}>
-    <button onClick={onToggle} aria-label={task.completed ? `Mark ${task.title} as active` : `Mark ${task.title} as completed`} className={cn('flex size-6 shrink-0 items-center justify-center rounded-full border-2 transition focus:outline-none focus:ring-4 focus:ring-[#dff0e7]', task.completed ? 'border-[#5d9d7b] bg-[#5d9d7b] text-white' : 'border-[#b9c9be] text-transparent hover:border-[#5d9d7b]')}>{task.completed ? <Check className="size-3.5" strokeWidth={3} /> : <Circle className="size-3.5" />}</button>
-    <div className="min-w-0 flex-1"><p className={cn('truncate text-sm font-medium', task.completed && 'text-[#99a59e] line-through')}>{task.title}</p><span className={cn('mt-1.5 inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ring-inset', priorityStyles[task.priority])}>{task.priority}</span></div>
-    <div className="flex shrink-0 items-center gap-1 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100"><button onClick={onEdit} className="rounded-lg p-2 text-[#84938b] hover:bg-[#f0f5f1] hover:text-[#286147]" aria-label={`Edit ${task.title}`}><Edit3 className="size-4" /></button><button onClick={onDelete} className="rounded-lg p-2 text-[#84938b] hover:bg-rose-50 hover:text-rose-600" aria-label={`Delete ${task.title}`}><Trash2 className="size-4" /></button></div>
-  </article>
-}

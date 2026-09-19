@@ -165,7 +165,30 @@
     font-family: Arial, Helvetica, sans-serif;
   }
   ::selection {
-    background: #dff0e7;
-    color: #18332a;
+    background: #b8d5ee;
+    color: #17263b;
   }
 }
+
+.retro-desktop {
+  background: radial-gradient(circle at 50% -10%, #f4fbff 0, #cbddeb 42%, #91adc7 100%);
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+.retro-window { border: 1px solid #17263b; background: #d6e0eb; box-shadow: 2px 2px 0 #f7fbff, 5px 6px 0 rgb(32 54 77 / 25%), inset 0 0 0 1px #8195aa; }
+.retro-titlebar { display:flex; align-items:center; justify-content:space-between; min-height:28px; padding:4px 7px; background: linear-gradient(#607d9b, #1e3855 48%, #4b6988); color:#f0f6fb; font:700 11px/1 'Courier New', monospace; letter-spacing:.08em; text-shadow:1px 1px #102238; }
+.retro-titlebar i { display:block; width:13px; height:12px; background:#dbe7f2; border:1px solid #1b2d43; box-shadow: inset 1px 1px #fff; }
+.retro-menubar { display:flex; gap:20px; padding:4px 9px; border-bottom:1px solid #788ba0; background:#e8eef4; color:#1b2c41; font:12px 'Courier New', monospace; text-decoration: underline; }
+.retro-kicker { color:#365675; font:700 11px 'Courier New', monospace; letter-spacing:.12em; }
+.retro-heading { max-width:620px; margin-top:8px; color:#213a56; font:700 clamp(2rem, 5vw, 3.4rem)/.98 'Courier New', monospace; letter-spacing:-.08em; text-shadow:1px 1px white; }
+.retro-chip { display:inline-flex; align-items:center; gap:5px; border:1px solid #8499ae; background:#eaf1f7; padding:4px 7px; color:#3b5873; font:700 10px 'Courier New', monospace; box-shadow:inset 1px 1px white; }
+.retro-screen { border:3px inset #c9d7e4; background:linear-gradient(135deg,#1b334e,#385b7d); padding:12px; box-shadow:inset 0 0 18px #132338; }
+.retro-progress { height:9px; border:2px inset #cbd7e2; background:#152a42; padding:1px; }.retro-progress div { height:100%; background:linear-gradient(90deg,#7faed2,#e4f3ff); }
+.retro-label { display:flex; flex-direction:column; gap:5px; color:#304a65; font:700 10px 'Courier New', monospace; }
+.retro-input { min-height:34px; border:2px inset #b8c7d5; background:#f1f5f8; padding:6px 8px; color:#1d3046; font:12px 'Trebuchet MS', sans-serif; outline:none; }.retro-input:focus { border-color:#527ea8; box-shadow:0 0 0 2px #adcce5; }
+.retro-button { display:flex; align-items:center; justify-content:center; gap:6px; min-height:34px; border:2px outset #e9f0f6; background:#d4dfe9; color:#233a53; font:700 11px 'Courier New', monospace; }.retro-button:active { border-style:inset; }.retro-button-primary { background:linear-gradient(#6e91b2,#385d80); color:#fff; text-shadow:1px 1px #1d344c; }
+.retro-note { border:1px solid #9badbf; background:#e8eff5; padding:9px; color:#58708a; font-size:11px; line-height:1.45; }
+.retro-tab { padding:5px 8px; color:#48627d; font:700 10px 'Courier New', monospace; }.retro-tab-active { background:#476b8e; color:white; box-shadow:inset 1px 1px #9eb9d0; }
+.retro-track { border:1px solid #8498ad; background:linear-gradient(#f2f6f9,#d7e1ea); box-shadow:inset 1px 1px white, 2px 2px 0 rgb(51 75 100 / 18%); }.retro-track:hover { background:#e5eef6; }.retro-track-done { background:#bdcbd8; color:#536b82; }
+.retro-tag { display:inline-block; margin-top:5px; padding:2px 5px; border:1px solid #7890a6; font:700 9px 'Courier New', monospace; }.retro-tag-red { background:#e4c7c7; color:#743f46; }.retro-tag-yellow { background:#e7ddbc; color:#65572d; }.retro-tag-blue { background:#c6d9e8; color:#385c7b; }
+.retro-icon { padding:5px; color:#4d6680; }.retro-icon:hover { background:#c1d5e6; }.retro-empty { border:2px dashed #879db3; background:#dce6ef; padding:42px 20px; text-align:center; color:#526b83; }
+@media (max-width: 640px) { .retro-menubar { gap:12px; font-size:10px; } .retro-window { box-shadow:2px 2px 0 #f7fbff, 3px 4px 0 rgb(32 54 77 / 25%), inset 0 0 0 1px #8195aa; } }
