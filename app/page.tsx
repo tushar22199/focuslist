@@ -94,9 +94,12 @@ export default function Page() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f8f6] text-[#18332a]">
-      <div className="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-10">
-        <header className="mb-9 flex items-center justify-between">
+    <main className="min-h-screen bg-[#f4f6f2] text-[#18332a]">
+      <div className="relative mx-auto max-w-7xl px-5 py-6 sm:px-8 sm:py-10">
+        <div aria-hidden="true" className="pointer-events-none absolute -top-32 right-0 size-96 rounded-full bg-[#dceee2] opacity-60 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute top-[34rem] -left-32 size-72 rounded-full bg-[#e8e4f5] opacity-50 blur-3xl" />
+        <div className="relative">
+        <header className="mb-10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex size-11 items-center justify-center rounded-2xl bg-[#183f32] text-white shadow-sm"><ClipboardList aria-hidden="true" /></div>
             <div><p className="text-lg font-semibold tracking-tight">FocusList</p><p className="text-xs text-[#718078]">Your day, made clear.</p></div>
@@ -106,10 +109,14 @@ export default function Page() {
 
         <section className="mb-9 grid gap-7 lg:grid-cols-[1fr_300px] lg:items-end">
           <div><p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#7e9087]">Today&apos;s focus</p><h1 className="max-w-xl text-4xl font-semibold tracking-[-0.04em] text-[#18332a] sm:text-5xl">Make space for what matters.</h1><p className="mt-4 max-w-lg text-base leading-7 text-[#718078]">Capture your priorities, keep momentum, and finish the day feeling lighter.</p></div>
-          <div className="grid grid-cols-3 gap-2 rounded-3xl border border-[#e2e9e3] bg-white p-2 shadow-[0_8px_30px_rgba(24,51,42,0.04)]">
-            <Stat label="Total" value={stats.total} />
-            <Stat label="Done" value={stats.completed} accent="text-[#3d8b70]" />
-            <Stat label="Pending" value={stats.pending} accent="text-[#c58132]" />
+          <div className="rounded-[1.75rem] border border-white/80 bg-white/85 p-3 shadow-[0_18px_50px_rgba(24,51,42,0.08)] backdrop-blur-sm">
+            <div className="grid grid-cols-3 gap-2">
+              <Stat label="Total" value={stats.total} />
+              <Stat label="Done" value={stats.completed} accent="text-[#3d8b70]" />
+              <Stat label="Pending" value={stats.pending} accent="text-[#c58132]" />
+            </div>
+            <div className="mt-3 flex items-center justify-between px-2 text-[11px] font-medium text-[#829088]"><span>Daily progress</span><span>{stats.total ? Math.round((stats.completed / stats.total) * 100) : 0}%</span></div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#edf2ed]"><div className="h-full rounded-full bg-[#5d9d7b] transition-all duration-500" style={{ width: `${stats.total ? (stats.completed / stats.total) * 100 : 0}%` }} /></div>
           </div>
         </section>
 
@@ -135,6 +142,7 @@ export default function Page() {
           </div>
         </section>
         <footer className="mt-10 text-center text-xs text-[#9aa79f]">FocusList · Your tasks are saved automatically in this browser.</footer>
+        </div>
       </div>
     </main>
   )
